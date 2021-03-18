@@ -27,3 +27,13 @@ class PayrollManager(BaseManager):
         for method_name in self.DECORATED_METHODS:
             method = getattr(self, "_%s" % method_name)
             setattr(self, method_name, self._get_data(method))
+
+    def _check_api_response_status(self, data, resource_name):
+        assert data['problem'] is None, (
+            'Expected no problem from API but received {}'.format(data['problem'])
+        )
+
+        try:
+            return data[resource_name.lower()]
+        except KeyError:
+            return data
