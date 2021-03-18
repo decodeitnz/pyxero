@@ -121,6 +121,7 @@ class BaseManager(object):
         "gte": ">=",
         "ne": "!=",
     }
+    DEFAULT_CONTENT_TYPE = "application/xml"
 
     def __init__(self):
         pass
@@ -210,7 +211,7 @@ class BaseManager(object):
             if headers is None:
                 headers = {}
 
-            headers["Content-Type"] = "application/xml"
+            headers["Content-Type"] = self.DEFAULT_CONTENT_TYPE
 
             if isinstance(self.credentials, OAuth2Credentials):
                 if self.credentials.tenant_id:

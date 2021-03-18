@@ -8,6 +8,8 @@ from .utils import singular
 
 
 class PayrollManager(BaseManager):
+    DEFAULT_CONTENT_TYPE = 'application/json'
+
     def __init__(self, name, credentials, unit_price_4dps=False, user_agent=None):
         from xero import __version__ as VERSION
 
