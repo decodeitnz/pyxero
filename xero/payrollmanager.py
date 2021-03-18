@@ -5,6 +5,7 @@ import requests
 from .basemanager import BaseManager
 from .constants import XERO_PAYROLL_URL
 from .utils import singular
+from .json import to_xero_json
 
 
 class PayrollManager(BaseManager):
@@ -47,3 +48,6 @@ class PayrollManager(BaseManager):
             return '/'.join((uri, data['{}ID'.format(self.singular.lower())]))
         else:
             return uri
+
+    def _prepare_data_for_save(self, data):
+        return to_xero_json(data).encode('utf-8')
