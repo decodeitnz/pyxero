@@ -29,7 +29,19 @@ class XeroBadRequest(XeroException):
     def __init__(self, response):
         if response.headers["content-type"].startswith("application/json"):
             data = json.loads(response.text)
-            msg = "%s: %s" % (data["Type"], data["Message"])
+            try:
+                msg = "%s: %s" % (data["Type"], data["Message"])
+            except KeyError:
+                msg = data['problem']['detail']
+
+                try:
+                    msg = '{}: {}'.format(
+                        msg,
+                        '; '.join((str(_['reason']) for _ in data['invalidFields'])),
+                    )
+                except (KeyError, TypeError):
+                    pass
+
             self.errors = [
                 err["Message"]
                 for elem in data.get("Elements", [])

@@ -48,7 +48,10 @@ class PayrollManager(BaseManager):
         if method == 'put':
             data = args[0]
 
-            return '/'.join((uri, data['{}ID'.format(self.singular.lower())]))
+            try:
+                return '/'.join((uri, data['{}ID'.format(self.singular.lower())]))
+            except KeyError:
+                return uri.lower()
         else:
             return uri
 
