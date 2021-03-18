@@ -37,3 +37,11 @@ class PayrollManager(BaseManager):
             return data[resource_name.lower()]
         except KeyError:
             return data
+
+    def _fix_uri(self, uri, method, *args, **kwargs):
+        if method == 'put':
+            data = args[0]
+
+            return '/'.join((uri, data['{}ID'.format(self.singular.lower())]))
+        else:
+            return uri

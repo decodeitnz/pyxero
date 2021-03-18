@@ -192,6 +192,9 @@ class BaseManager(object):
 
         return self._check_api_response_status(data, resource_name)
 
+    def _fix_uri(self, uri, method, *args, **kwargs):
+        return uri
+
     def _get_data(self, func):
         """ This is the decorator for our DECORATED_METHODS.
         Each of the decorated methods must return:
@@ -224,7 +227,7 @@ class BaseManager(object):
             headers["User-Agent"] = self.user_agent
 
             response = getattr(requests, method)(
-                uri,
+                self._fix_uri(uri, method, *args, **kwargs),
                 data=body,
                 headers=headers,
                 auth=self.credentials.oauth,
