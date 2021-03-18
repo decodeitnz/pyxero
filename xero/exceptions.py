@@ -36,8 +36,8 @@ class XeroBadRequest(XeroException):
 
                 try:
                     msg = '{}: {}'.format(
-                        msg,
-                        '; '.join((str(_['reason']) for _ in data['invalidFields'])),
+                        msg.rstrip('.'),
+                        '; '.join((str(_['reason']) for _ in data['problem']['invalidFields'])),
                     )
                 except (KeyError, TypeError):
                     pass
