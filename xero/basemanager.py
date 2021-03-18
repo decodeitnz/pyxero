@@ -20,6 +20,7 @@ from .exceptions import (
     XeroRateLimitExceeded,
     XeroTenantIdNotSet,
     XeroUnauthorized,
+    XeroUnsupportedMediaType,
 )
 from .utils import isplural, json_load_object_hook, singular
 
@@ -262,7 +263,8 @@ class BaseManager(object):
 
             elif response.status_code == 404:
                 raise XeroNotFound(response)
-
+            elif response.status_code == 415:
+                raise XeroUnsupportedMediaType(response)
             elif response.status_code == 500:
                 raise XeroInternalError(response)
 
