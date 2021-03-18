@@ -179,14 +179,27 @@ class BaseManager(object):
 
     def _parse_api_response(self, response, resource_name):
         data = json.loads(response.text, object_hook=json_load_object_hook)
-        assert data["Status"] == "OK", (
-            "Expected the API to say OK but received %s" % data["Status"]
-        )
 
-        try:
-            return data[resource_name]
-        except KeyError:
-            return data
+        if 'Status' in data:
+            assert data["Status"] == "OK", (
+                "Expected the API to say OK but received %s" % data["Status"]
+            )
+
+            try:
+                return data[resource_name]
+            except KeyError:
+                return data
+        elif 'problem' in data:
+            assert data['problem'] is None, (
+                'Expected no problem from API but received {}'.format(data['problem'])
+            )
+
+            try:
+                return data[resource_name.lower()]
+            except KeyError:
+                return data
+
+        raise AssertionError('Unrecognised API response structure')
 
     def _get_data(self, func):
         """ This is the decorator for our DECORATED_METHODS.
